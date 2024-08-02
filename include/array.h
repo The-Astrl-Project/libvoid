@@ -58,6 +58,6 @@ void *lvd_array_new(struct lvd_array **array, const int array_length, const unsi
  * @param array A pointer to an initialized ``lvd_array`` struct
  * @param buffer A pointer to a buffer of data
  * @param buffer_length_size The total length of the buffer (including the chunk size)
- * @return ``0`` if successful, else ``-1``
+ * @return A pointer to the array or ``NULL``
  */
-int lvd_array_append(struct lvd_array **array, const void *buffer, const int buffer_length_size);
+void *lvd_array_append(struct lvd_array **array, const void *buffer, const int buffer_length_size);

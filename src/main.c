@@ -11,7 +11,7 @@
 
 // Header Declarations
 // ----------------------------------------------------------------
-
+#include <stdio.h>
 // ---
 #include "include/main.h"
 #include "include/array.h"
@@ -41,7 +41,56 @@
 // Main
 int main()
 {
-    return -1;
+    // Logging/Error handling
+    void *status_one;
+
+    // Allocate a new array
+    struct lvd_array *array_one;
+
+    // Create new arrays of different sizes
+    status_one = lvd_array_new(&array_one, 8, sizeof(char));
+
+    // Validate
+    if (status_one == NULL)
+    {
+        // Log
+        printf("Failed at check #1\n");
+
+        // Return
+        return -1;
+    }
+
+    // Append new data to the array
+    status_one = lvd_array_append(&array_one, "The Quick Brown Fox Jumps Over The Lazy Dog\n", 45);
+
+    // Validate
+    if (status_one == NULL)
+    {
+        // Log
+        printf("Failed at check #2\n");
+
+        // Return
+        return -1;
+    }
+
+    // Append new data to the array
+    status_one = lvd_array_append(&array_one, "The Quick Brown Fox Jumps Over The Lazy Dog\n", 45);
+
+    // Validate
+    if (status_one == NULL)
+    {
+        // Log
+        printf("Failed at check #3\n");
+
+        // Return
+        return -1;
+    }
+
+    // Print data
+    printf("%s\n", (char *)status_one);
+
+    // Exit
+    return 0;
 }
 
 // Methods

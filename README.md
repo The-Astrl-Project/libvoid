@@ -5,4 +5,4 @@
 <h1 align="center">libVoid</h1>
 
 <!-- Subheading -->
-<h3 align="center">A C memory management library</h3>
+<h3 align="center">A memory management library for C</h3>
