@@ -12,6 +12,7 @@
 // Header Declarations
 // ----------------------------------------------------------------
 #include <stdio.h>
+#include <stdlib.h>
 // ---
 #include "include/main.h"
 #include "include/array.h"
@@ -31,6 +32,12 @@
 // ----------------------------------------------------------------
 
 // Struct Definitions
+/* Sample struct for testing */
+struct my_struct
+{
+    char *message;
+    int value;
+};
 
 // Enum Definitions
 
@@ -42,52 +49,82 @@
 int main()
 {
     // Logging/Error handling
-    void *status_one;
+    void *exit_status;
 
     // Allocate a new array
-    struct lvd_array *array_one;
+    struct lvd_array *array;
 
-    // Create new arrays of different sizes
-    status_one = lvd_array_new(&array_one, 8, sizeof(char));
+    // Create a new array with 2 indicies of size my_struct
+    exit_status = lvd_array_new(&array, 2, sizeof(struct my_struct));
 
-    // Validate
-    if (status_one == NULL)
+    // Check if an array was allocated
+    if (exit_status == NULL)
     {
         // Log
-        printf("Failed at check #1\n");
+        printf("Failed to allocate array\n");
 
-        // Return
+        // Exit
         return -1;
     }
 
-    // Append new data to the array
-    status_one = lvd_array_append(&array_one, "The Quick Brown Fox Jumps Over The Lazy Dog\n", 45);
+    // Allocate new structs
+    struct my_struct *one;
+    struct my_struct *two;
+    struct my_struct *three;
 
-    // Validate
-    if (status_one == NULL)
-    {
-        // Log
-        printf("Failed at check #2\n");
+    one = (struct my_struct *)calloc(1, sizeof(struct my_struct));
+    two = (struct my_struct *)calloc(1, sizeof(struct my_struct));
+    three = (struct my_struct *)calloc(1, sizeof(struct my_struct));
 
-        // Return
-        return -1;
-    }
+    // Populate with data
+    one->message = "Hello Everynyan!\n";
+    one->value = 0;
 
-    // Append new data to the array
-    status_one = lvd_array_append(&array_one, "The Quick Brown Fox Jumps Over The Lazy Dog\n", 45);
+    two->message = "How are you?\n";
+    two->value = -10;
 
-    // Validate
-    if (status_one == NULL)
-    {
-        // Log
-        printf("Failed at check #3\n");
+    three->message = "Fine, thank you!\n";
+    three->value = 10;
 
-        // Return
-        return -1;
-    }
+    // Append data
+    lvd_array_append(&array, one, sizeof(*one));
+    lvd_array_append(&array, two, sizeof(*two));
 
-    // Print data
-    printf("%s\n", (char *)status_one);
+    // Declare return pointers
+    struct my_struct *return_value_one;
+    struct my_struct *return_value_two;
+    struct my_struct *return_value_three;
+
+    // Retrieve data
+    lvd_array_get(&array, 0, (void *)&return_value_one);
+    lvd_array_get(&array, 1, (void *)&return_value_two);
+
+    // Log
+    printf("Fits array\n---\n");
+    printf("%s", return_value_one->message);
+    printf("%s", return_value_two->message);
+    printf("---\n");
+
+    // Append
+    lvd_array_append(&array, three, sizeof(*three));
+
+    // Retrieve data
+    lvd_array_get(&array, 2, (void *)&return_value_three);
+
+    // Log
+    printf("After realloc\n---\n");
+    printf("%s", return_value_one->message);
+    printf("%s", return_value_two->message);
+    printf("%s", return_value_three->message);
+    printf("%i\n", return_value_one->value);
+    printf("%i\n", return_value_two->value);
+    printf("%i\n", return_value_three->value);
+    printf("---\n");
+
+    // Free
+    free(return_value_one);
+    free(return_value_two);
+    free(return_value_three);
 
     // Exit
     return 0;

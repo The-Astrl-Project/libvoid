@@ -46,18 +46,29 @@ struct lvd_array;
  * Allocates a new ``lvd_array`` with the specified length and memory chunk size.
  *
  * @param array A pointer to an uninitialized ``lvd_array`` struct
- * @param array_length The total starting length of the array
- * @param array_size The total size of each chunk in the array
+ * @param array_length The starting length of the array
+ * @param array_size The size of each chunk in the array
  * @return A pointer to the new array or ``NULL``
  */
-void *lvd_array_new(struct lvd_array **array, const int array_length, const unsigned long array_size);
+void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size);
 
 /**
- * Appends the given ``buffer`` to ``array``.
+ * Appends the given ``buffer`` to ``array``. The ``buffer`` must be
+ * of the same ``size`` as the array.
  *
  * @param array A pointer to an initialized ``lvd_array`` struct
  * @param buffer A pointer to a buffer of data
  * @param buffer_length_size The total length of the buffer (including the chunk size)
  * @return A pointer to the array or ``NULL``
  */
-void *lvd_array_append(struct lvd_array **array, const void *buffer, const int buffer_length_size);
+void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size);
+
+/**
+ * Retrieves the data located at the given index.
+ *
+ * @param array A pointer to an initialized ``lvd_array`` struct
+ * @param array_index The array index to access
+ * @param return_data A pointer that will hold the return data (must be manually ``free``d after use)
+ * @return A pointer to the data entry or ``NULL``
+ */
+void *lvd_array_get(struct lvd_array **array, const unsigned int array_index, void **return_data);

@@ -42,7 +42,7 @@ struct lvd_array
     /* Stores the array block size */
     unsigned long _array_size;
 
-    /* Stores the end index  of the array */
+    /* Stores the end index of the array */
     unsigned int _array_index_end;
 };
 
@@ -55,13 +55,13 @@ struct lvd_array
 // Main
 
 // Methods
-void *lvd_array_new(struct lvd_array **array, const int array_length, const unsigned long array_size)
+void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
 {
     // Allocate memory for a new lvd_array struct
-    *array = (struct lvd_array *)calloc(1, sizeof(struct lvd_array));
+    (*array) = (struct lvd_array *)calloc(1, sizeof(struct lvd_array));
 
     // Check if the allocation was successful
-    if (*array == NULL)
+    if ((*array) == NULL)
     {
         // Jump to failure
         goto failure;
@@ -90,17 +90,17 @@ failure:
     return NULL;
 }
 
-void *lvd_array_append(struct lvd_array **array, const void *buffer, const int buffer_length_size)
+void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size)
 {
     // Validate the lvd_array struct is already initalized
-    if (*array == NULL)
+    if ((*array) == NULL)
     {
         // Jump to failure
         goto failure;
     }
 
     // Validate the array still has available space
-    int free_memory = (*array)->_array_length - (*array)->_array_index_end;
+    int free_memory = ((*array)->_array_length - (*array)->_array_index_end);
     if (free_memory == 0 || free_memory < (buffer_length_size / (*array)->_array_size))
     {
         // Re-allocate the array pointer
@@ -120,18 +120,19 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const int b
         (*array)->_array_length = (*array)->_array_length + (buffer_length_size / (*array)->_array_size);
     }
 
-    // Find the first NULL terminator
-    int first_terminator = 0;
-    for (int i = 0; i < (*array)->_array_length; i++)
+    // Stores the found terminator index
+    int terminator_index = 0;
+    // Find the first NULL terminator from array_index_end -> array_length (inclusive)
+    for (int i = (*array)->_array_index_end; i <= (*array)->_array_length; i++)
     {
         // Get the current memory entry
-        unsigned char *current_entry = (*array)->_ptr + i;
+        unsigned char *current_entry = (*array)->_ptr + (i * (*array)->_array_size);
 
-        // Check if NULL
+        // Check if current entry is NULL
         if (*current_entry == '\0')
         {
-            // Update the local variable
-            first_terminator = i;
+            // Set the terminator index
+            terminator_index = i;
 
             // Break
             break;
@@ -139,13 +140,49 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const int b
     }
 
     // Copy over data
-    memcpy((*array)->_ptr + ((*array)->_array_size * first_terminator), buffer, buffer_length_size);
+    memcpy((*array)->_ptr + (terminator_index * (*array)->_array_size), buffer, buffer_length_size);
 
     // Set the new array end
-    (*array)->_array_index_end = first_terminator + (buffer_length_size / (*array)->_array_size);
+    (*array)->_array_index_end = terminator_index + (buffer_length_size / (*array)->_array_size);
 
     // Return
     return (*array)->_ptr;
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void *lvd_array_get(struct lvd_array **array, const unsigned int array_index, void **return_data)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Validate the index is not out of bounds
+    // NOTE: I *could* have it check if the index is between
+    //      start_index < index < end_index but that wouldn't
+    //      be vary "array like". So capping it at the array
+    //      length is a better alternative however, that means
+    //      that NULL could be returned. It's really a matter
+    //      of preference.
+    if (array_index > (*array)->_array_length)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Allocate space
+    (*return_data) = calloc(1, (*array)->_array_size);
+
+    // Copy data
+    memcpy((*return_data), (*array)->_ptr + ((array_index * (*array)->_array_size)), (1 * (*array)->_array_size));
+
+    // Return
+    return (*return_data);
 
 failure:
     // Return NULL
