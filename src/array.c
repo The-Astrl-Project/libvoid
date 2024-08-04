@@ -153,7 +153,7 @@ failure:
     return NULL;
 }
 
-void *lvd_array_get(struct lvd_array **array, const unsigned int array_index, void **return_data)
+void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
 {
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
@@ -175,14 +175,8 @@ void *lvd_array_get(struct lvd_array **array, const unsigned int array_index, vo
         goto failure;
     }
 
-    // Allocate space
-    (*return_data) = calloc(1, (*array)->_array_size);
-
-    // Copy data
-    memcpy((*return_data), (*array)->_ptr + ((array_index * (*array)->_array_size)), (1 * (*array)->_array_size));
-
     // Return
-    return (*return_data);
+    return (*array)->_ptr + ((array_index * (*array)->_array_size));
 
 failure:
     // Return NULL

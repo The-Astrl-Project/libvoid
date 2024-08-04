@@ -96,11 +96,11 @@ int main()
     struct my_struct *return_value_three;
 
     // Retrieve data
-    lvd_array_get(&array, 0, (void *)&return_value_one);
-    lvd_array_get(&array, 1, (void *)&return_value_two);
+    return_value_one = (struct my_struct *)lvd_array_get(&array, 0);
+    return_value_two = (struct my_struct *)lvd_array_get(&array, 1);
 
     // Log
-    printf("Fits array\n---\n");
+    printf("Data matches array length\n---\n");
     printf("%s", return_value_one->message);
     printf("%s", return_value_two->message);
     printf("---\n");
@@ -108,11 +108,13 @@ int main()
     // Append
     lvd_array_append(&array, three, sizeof(*three));
 
-    // Retrieve data
-    lvd_array_get(&array, 2, (void *)&return_value_three);
+    // Re-retrieve data
+    return_value_one = (struct my_struct *)lvd_array_get(&array, 0);
+    return_value_two = (struct my_struct *)lvd_array_get(&array, 1);
+    return_value_three = (struct my_struct *)lvd_array_get(&array, 2);
 
     // Log
-    printf("After realloc\n---\n");
+    printf("After array re-allocation\n---\n");
     printf("%s", return_value_one->message);
     printf("%s", return_value_two->message);
     printf("%s", return_value_three->message);
@@ -121,10 +123,20 @@ int main()
     printf("%i\n", return_value_three->value);
     printf("---\n");
 
-    // Free
-    free(return_value_one);
-    free(return_value_two);
-    free(return_value_three);
+    // Modify some data
+    return_value_one->value = 99;
+
+    // Declare another return pointer
+    struct my_struct *return_value_one_again;
+
+    // Re-re-retrieve data
+    return_value_one_again = (struct my_struct *)lvd_array_get(&array, 0);
+
+    // Log
+    printf("After modification\n---\n");
+    printf("%i\n", return_value_one->value);
+    printf("%i\n", return_value_one_again->value);
+    printf("---\n");
 
     // Exit
     return 0;
