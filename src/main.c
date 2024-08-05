@@ -71,10 +71,12 @@ int main()
     struct my_struct *one;
     struct my_struct *two;
     struct my_struct *three;
+    struct my_struct *four;
 
     one = (struct my_struct *)calloc(1, sizeof(struct my_struct));
     two = (struct my_struct *)calloc(1, sizeof(struct my_struct));
     three = (struct my_struct *)calloc(1, sizeof(struct my_struct));
+    four = (struct my_struct *)calloc(1, sizeof(struct my_struct));
 
     // Populate with data
     one->message = "Hello Everynyan!\n";
@@ -86,6 +88,9 @@ int main()
     three->message = "Fine, thank you!\n";
     three->value = 10;
 
+    four->message = "OH MY GAWD!!\n";
+    four->value = 1337;
+
     // Append data
     lvd_array_append(&array, one, sizeof(*one));
     lvd_array_append(&array, two, sizeof(*two));
@@ -94,6 +99,7 @@ int main()
     struct my_struct *return_value_one;
     struct my_struct *return_value_two;
     struct my_struct *return_value_three;
+    struct my_struct *return_value_four;
 
     // Retrieve data
     return_value_one = (struct my_struct *)lvd_array_get(&array, 0);
@@ -136,6 +142,27 @@ int main()
     printf("After modification\n---\n");
     printf("%i\n", return_value_one->value);
     printf("%i\n", return_value_one_again->value);
+    printf("---\n");
+
+    // Insert data
+    lvd_array_insert_at(&array, 0, four, sizeof(*four));
+
+    // Re-re-re-retrieve data
+    return_value_one = (struct my_struct *)lvd_array_get(&array, 0);
+    return_value_two = (struct my_struct *)lvd_array_get(&array, 1);
+    return_value_three = (struct my_struct *)lvd_array_get(&array, 2);
+    return_value_four = (struct my_struct *)lvd_array_get(&array, 3);
+
+    // Log
+    printf("After array insertion\n---\n");
+    printf("%s", return_value_one->message);
+    printf("%s", return_value_two->message);
+    printf("%s", return_value_three->message);
+    printf("%s", return_value_four->message);
+    printf("%i\n", return_value_one->value);
+    printf("%i\n", return_value_two->value);
+    printf("%i\n", return_value_three->value);
+    printf("%i\n", return_value_four->value);
     printf("---\n");
 
     // Exit

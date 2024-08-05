@@ -71,3 +71,15 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
  * @return A pointer to the data entry or ``NULL``
  */
 void *lvd_array_get(struct lvd_array **array, const unsigned int array_index);
+
+/**
+ * Inserts the given ``buffer`` at the specified ``array_index``.
+ * Any data located at ``array_index`` will be shifted right by one.
+ *
+ * @param array A pointer to an initialized ``lvd_array`` struct
+ * @param array_index The array index to access
+ * @param buffer A pointer to a buffer of data
+ * @param buffer_length_size The total length of the buffer (including the chunk size)
+ * @return A pointer to the array or ``NULL``
+ */
+void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size);

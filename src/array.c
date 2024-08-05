@@ -182,3 +182,56 @@ failure:
     // Return NULL
     return NULL;
 }
+
+void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Validate the index is not out of bounds
+    // @see void *lvd_array_get
+    if (array_index > (*array)->_array_length)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Check if data is present at array index
+    unsigned char *data_presence = (*array)->_ptr + (array_index * (*array)->_array_size);
+    if (data_presence != NULL)
+    {
+        // Re-allocate the array pointer
+        (*array)->_ptr = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
+
+        // Validate the re-allocation
+        if ((*array)->_ptr == NULL)
+        {
+            // Jump to failure
+            goto failure;
+        }
+
+        // Zero out the new memory chunk
+        memset((*array)->_ptr + ((*array)->_array_size * (*array)->_array_index_end), '\0', buffer_length_size);
+
+        // Recursively shift data down by one
+        for (int i = (*array)->_array_length; i >= (int)array_index; i--)
+        {
+            // Move data down by one
+            memcpy((*array)->_ptr + ((i + 1) * (*array)->_array_size), (*array)->_ptr + (i * (*array)->_array_size), (*array)->_array_size);
+        }
+
+        // Update the array length value
+        (*array)->_array_length = (*array)->_array_length + (buffer_length_size / (*array)->_array_size);
+    }
+
+    // Insert data at index
+    memcpy((*array)->_ptr + (array_index * (*array)->_array_size), buffer, buffer_length_size);
+
+failure:
+    // Return NULL
+    return NULL;
+}
