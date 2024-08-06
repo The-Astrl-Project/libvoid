@@ -57,25 +57,37 @@ struct lvd_array
 // Methods
 void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
 {
+    // Function scope variables
+    void *tmp;
+
     // Allocate memory for a new lvd_array struct
-    (*array) = (struct lvd_array *)calloc(1, sizeof(struct lvd_array));
+    tmp = calloc(1, sizeof(struct lvd_array));
 
     // Check if the allocation was successful
-    if ((*array) == NULL)
+    if (tmp == NULL)
     {
+        // Set the array struct to NULL
+        (*array) = NULL;
+
         // Jump to failure
         goto failure;
     }
+
+    // Set the struct pointer
+    (*array) = tmp;
 
     // Allocate a new array
-    (*array)->_ptr = calloc(array_length, array_size);
+    tmp = calloc(array_length, array_size);
 
     // Check if allocation was successful
-    if ((*array)->_ptr == NULL)
+    if (tmp == NULL)
     {
         // Jump to failure
         goto failure;
     }
+
+    // Set the array pointer
+    (*array)->_ptr = tmp;
 
     // Update struct
     (*array)->_array_size = array_size;
@@ -86,12 +98,22 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
     return (*array)->_ptr;
 
 failure:
+    // Check if the array struct was initialized
+    if ((*array) != NULL)
+    {
+        // Free
+        free((*array));
+    }
+
     // Return NULL
     return NULL;
 }
 
 void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size)
 {
+    // Function scope variables
+    void *tmp;
+
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
     {
@@ -104,14 +126,17 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
     if (free_memory == 0 || free_memory < (buffer_length_size / (*array)->_array_size))
     {
         // Re-allocate the array pointer
-        (*array)->_ptr = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
+        tmp = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
 
         // Validate the re-allocation
-        if ((*array)->_ptr == NULL)
+        if (tmp == NULL)
         {
             // Jump to failure
             goto failure;
         }
+
+        // Update the array pointer
+        (*array)->_ptr = tmp;
 
         // Zero out the new memory chunk
         memset((*array)->_ptr + ((*array)->_array_size * (*array)->_array_index_end), '\0', buffer_length_size);
@@ -185,6 +210,9 @@ failure:
 
 void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
 {
+    // Function scope variables
+    void *tmp;
+
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
     {
@@ -205,14 +233,17 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
     if (data_presence != NULL)
     {
         // Re-allocate the array pointer
-        (*array)->_ptr = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
+        tmp = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
 
         // Validate the re-allocation
-        if ((*array)->_ptr == NULL)
+        if (tmp == NULL)
         {
             // Jump to failure
             goto failure;
         }
+
+        // Update the array pointer
+        (*array)->_ptr = tmp;
 
         // Zero out the new memory chunk
         memset((*array)->_ptr + ((*array)->_array_size * (*array)->_array_index_end), '\0', buffer_length_size);
