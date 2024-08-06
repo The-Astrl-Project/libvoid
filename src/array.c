@@ -57,39 +57,26 @@ struct lvd_array
 // Methods
 void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
 {
-    // Function scope variables
-    void *tmp;
+    // Temporary function scope variables
+    void *struct_alloc;
+    void *array_ptr_alloc;
 
     // Allocate memory for a new lvd_array struct
-    tmp = calloc(1, sizeof(struct lvd_array));
+    struct_alloc = calloc(1, sizeof(struct lvd_array));
 
-    // Check if the allocation was successful
-    if (tmp == NULL)
-    {
-        // Set the array struct to NULL
-        (*array) = NULL;
-
-        // Jump to failure
-        goto failure;
-    }
-
-    // Set the struct pointer
-    (*array) = tmp;
-
-    // Allocate a new array
-    tmp = calloc(array_length, array_size);
+    // Allocate memory for a new lvd_array array pointer
+    array_ptr_alloc = calloc(array_length, array_size);
 
     // Check if allocation was successful
-    if (tmp == NULL)
+    if (struct_alloc == NULL || array_ptr_alloc == NULL)
     {
         // Jump to failure
         goto failure;
     }
 
-    // Set the array pointer
-    (*array)->_ptr = tmp;
-
-    // Update struct
+    // Update the array struct
+    (*array) = struct_alloc;
+    (*array)->_ptr = array_ptr_alloc;
     (*array)->_array_size = array_size;
     (*array)->_array_length = array_length;
     (*array)->_array_index_end = 0;
@@ -98,21 +85,14 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
     return (*array)->_ptr;
 
 failure:
-    // Check if the array struct was initialized
-    if ((*array) != NULL)
-    {
-        // Free
-        free((*array));
-    }
-
     // Return NULL
     return NULL;
 }
 
 void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size)
 {
-    // Function scope variables
-    void *tmp;
+    // Temporary function scope variables
+    void *reallocated_array_pointer;
 
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
@@ -121,42 +101,43 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
         goto failure;
     }
 
-    // Validate the array still has available space
-    int free_memory = ((*array)->_array_length - (*array)->_array_index_end);
+    // Calculate the amount of free memory left in the array
+    int free_memory = (*array)->_array_length - (*array)->_array_index_end;
+
+    // Validate the array pointer has enough memory for the new buffer
     if (free_memory == 0 || free_memory < (buffer_length_size / (*array)->_array_size))
     {
         // Re-allocate the array pointer
-        tmp = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
+        reallocated_array_pointer = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
 
         // Validate the re-allocation
-        if (tmp == NULL)
+        if (reallocated_array_pointer == NULL)
         {
             // Jump to failure
             goto failure;
         }
 
         // Update the array pointer
-        (*array)->_ptr = tmp;
+        (*array)->_ptr = reallocated_array_pointer;
 
         // Zero out the new memory chunk
-        memset((*array)->_ptr + ((*array)->_array_size * (*array)->_array_index_end), '\0', buffer_length_size);
+        memset((*array)->_ptr + ((*array)->_array_length * (*array)->_array_size), '\0', buffer_length_size);
 
         // Update the array length value
-        (*array)->_array_length = (*array)->_array_length + (buffer_length_size / (*array)->_array_size);
+        (*array)->_array_length += (buffer_length_size / (*array)->_array_size);
     }
 
-    // Stores the found terminator index
-    int terminator_index = 0;
     // Find the first NULL terminator from array_index_end -> array_length (inclusive)
+    int terminator_index = 0;
     for (int i = (*array)->_array_index_end; i <= (*array)->_array_length; i++)
     {
         // Get the current memory entry
         unsigned char *current_entry = (*array)->_ptr + (i * (*array)->_array_size);
 
-        // Check if current entry is NULL
+        // Check if the current entry is a NULL terminator
         if (*current_entry == '\0')
         {
-            // Set the terminator index
+            // Set the return index
             terminator_index = i;
 
             // Break
@@ -164,7 +145,7 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
         }
     }
 
-    // Copy over data
+    // Copy data from the buffer to the pointer
     memcpy((*array)->_ptr + (terminator_index * (*array)->_array_size), buffer, buffer_length_size);
 
     // Set the new array end
@@ -200,8 +181,8 @@ void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
         goto failure;
     }
 
-    // Return
-    return (*array)->_ptr + ((array_index * (*array)->_array_size));
+    // Return the data entry at array_index
+    return ((*array)->_ptr + ((array_index * (*array)->_array_size)));
 
 failure:
     // Return NULL
@@ -210,8 +191,8 @@ failure:
 
 void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
 {
-    // Function scope variables
-    void *tmp;
+    // Temporary function scope variables
+    void *reallocated_array_pointer;
 
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
@@ -228,38 +209,38 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
         goto failure;
     }
 
-    // Check if data is present at array index
-    unsigned char *data_presence = (*array)->_ptr + (array_index * (*array)->_array_size);
-    if (data_presence != NULL)
+    // Check if data is present at the specified array index
+    unsigned char *is_data_present = (*array)->_ptr + (array_index * (*array)->_array_size);
+    if (is_data_present != NULL)
     {
         // Re-allocate the array pointer
-        tmp = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
+        reallocated_array_pointer = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size) + buffer_length_size);
 
         // Validate the re-allocation
-        if (tmp == NULL)
+        if (reallocated_array_pointer == NULL)
         {
             // Jump to failure
             goto failure;
         }
 
         // Update the array pointer
-        (*array)->_ptr = tmp;
+        (*array)->_ptr = reallocated_array_pointer;
 
         // Zero out the new memory chunk
-        memset((*array)->_ptr + ((*array)->_array_size * (*array)->_array_index_end), '\0', buffer_length_size);
+        memset((*array)->_ptr + ((*array)->_array_length * (*array)->_array_size), '\0', buffer_length_size);
 
-        // Recursively shift data down by one
+        // Iterate through the array and shift data right by one
         for (int i = (*array)->_array_length; i >= (int)array_index; i--)
         {
-            // Move data down by one
-            memcpy((*array)->_ptr + ((i + 1) * (*array)->_array_size), (*array)->_ptr + (i * (*array)->_array_size), (*array)->_array_size);
+            // Shift data
+            memmove((*array)->_ptr + ((i + 1) * (*array)->_array_size), (*array)->_ptr + (i * (*array)->_array_size), (*array)->_array_size);
         }
 
         // Update the array length value
-        (*array)->_array_length = (*array)->_array_length + (buffer_length_size / (*array)->_array_size);
+        (*array)->_array_length += (buffer_length_size / (*array)->_array_size);
     }
 
-    // Insert data at index
+    // Copy data from the buffer to the specified array index
     memcpy((*array)->_ptr + (array_index * (*array)->_array_size), buffer, buffer_length_size);
 
 failure:
