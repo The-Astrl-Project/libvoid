@@ -229,12 +229,8 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
         // Zero out the new memory chunk
         memset((*array)->_ptr + ((*array)->_array_length * (*array)->_array_size), '\0', buffer_length_size);
 
-        // Iterate through the array and shift data right by one
-        for (int i = (*array)->_array_length; i >= (int)array_index; i--)
-        {
-            // Shift data
-            memmove((*array)->_ptr + ((i + 1) * (*array)->_array_size), (*array)->_ptr + (i * (*array)->_array_size), (*array)->_array_size);
-        }
+        // Shift the data right by one in a single operation
+        memmove((*array)->_ptr + ((array_index + 1) * (*array)->_array_size), (*array)->_ptr + (array_index * (*array)->_array_size), ((*array)->_array_length - array_index) * (*array)->_array_size);
 
         // Update the array length value
         (*array)->_array_length += (buffer_length_size / (*array)->_array_size);
