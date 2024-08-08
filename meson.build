@@ -25,5 +25,10 @@ source_files = globber.stdout().strip().replace('./', '').split('\n')
 include_directory = include_directories('include')
 
 # Unit Tests
-test_executable = executable('libvoid_unit_test', 'tests/tests.c', sources: source_files, include_directories: include_directory)
+test_executable = executable(
+    'libvoid_unit_test',
+    'tests/tests.c',
+    sources: source_files,
+    include_directories: include_directory,
+)
 test('Core Functionality', test_executable)
