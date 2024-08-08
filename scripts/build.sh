@@ -11,7 +11,7 @@
 #!/usr/bin/env bash
 
 # Constants
-declare -r POSSIBLE_OPTIONS=":ghcb"
+declare -r POSSIBLE_OPTIONS=":ghcbt"
 
 # Main
 function main()
@@ -34,6 +34,10 @@ function main()
             b)
                 # Build from source
                 build
+            ;;
+            t)
+                # Run meson tests
+                tests
             ;;
             ?)
                 # Invalid argument/option
@@ -72,6 +76,7 @@ function help()
     echo "h     Print this help message"
     echo "c     Clean the build directory"
     echo "b     Build the project"
+    echo "t     Run project unit tests"
     echo
 }
 
@@ -99,6 +104,30 @@ function build()
 
         # Compile
         meson compile
+
+        # Exit
+        exit
+    fi
+
+    # Create a new build directory
+    meson setup ./build > /dev/null 2>&1
+
+    # Log
+    echo "Created build directory"
+
+    # Re-run
+    build
+}
+
+function tests()
+{
+    # Check if ./build exists
+    if [ -d ./build ]; then
+        # Switch to ./build
+        cd ./build
+
+        # Compile
+        meson test
 
         # Exit
         exit

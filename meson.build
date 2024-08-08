@@ -24,9 +24,6 @@ source_files = globber.stdout().strip().replace('./', '').split('\n')
 # Include the full include directory
 include_directory = include_directories('include')
 
-# Project Executable
-executable(
-    'libvoid',
-    sources: source_files,
-    include_directories: include_directory,
-)
+# Unit Tests
+test_executable = executable('libvoid_unit_test', 'tests/tests.c', sources: source_files, include_directories: include_directory)
+test('Core Functionality', test_executable)

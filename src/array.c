@@ -81,7 +81,7 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
     (*array)->_array_length = array_length;
     (*array)->_array_index_end = 0;
 
-    // Return
+    // Return the array pointer
     return (*array)->_ptr;
 
 failure:
@@ -149,9 +149,10 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
     memcpy((*array)->_ptr + (terminator_index * (*array)->_array_size), buffer, buffer_length_size);
 
     // Set the new array end
+    // NOTE: This seems kinda redundant(?). Possible change in the future
     (*array)->_array_index_end = terminator_index + (buffer_length_size / (*array)->_array_size);
 
-    // Return
+    // Return the array pointer
     return (*array)->_ptr;
 
 failure:
@@ -239,7 +240,76 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
     // Copy data from the buffer to the specified array index
     memcpy((*array)->_ptr + (array_index * (*array)->_array_size), buffer, buffer_length_size);
 
+    // Update the array end index
+    (*array)->_array_index_end += (buffer_length_size / (*array)->_array_size);
+
+    // Return the array pointer
+    return (*array)->_ptr;
+
 failure:
     // Return NULL
     return NULL;
+}
+
+void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_index)
+{
+    // Temporary function scope variables
+    void *reallocated_array_pointer;
+
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Validate the index is not out of bounds
+    // @see void *lvd_array_get
+    if (array_index > (*array)->_array_length)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Shift the data left by one overwriting any other data
+    memmove((*array)->_ptr + (array_index * (*array)->_array_size), (*array)->_ptr + ((array_index + 1) * (*array)->_array_size), (((*array)->_array_length - 1) - array_index) * (*array)->_array_size);
+
+    // Check if the array should be re-allocated
+    if ((*array)->_array_index_end == (*array)->_array_length)
+    {
+        // Re-allocate the array pointer
+        reallocated_array_pointer = realloc((*array)->_ptr, ((*array)->_array_length - 1) * (*array)->_array_size);
+
+        // Validate the re-allocation
+        if (reallocated_array_pointer == NULL)
+        {
+            // Jump to failure
+            goto failure;
+        }
+
+        // Update the array pointer
+        (*array)->_ptr = reallocated_array_pointer;
+
+        // Update the array length
+        (*array)->_array_length -= 1;
+    }
+
+    // Update the array end index
+    (*array)->_array_index_end -= 1;
+
+    // Return the array pointer
+    return (*array)->_ptr;
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void lvd_array_free(struct lvd_array **array)
+{
+    // Free the array pointer
+    free((*array)->_ptr);
+
+    // Free the array struct
+    free((*array));
 }

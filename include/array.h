@@ -83,3 +83,23 @@ void *lvd_array_get(struct lvd_array **array, const unsigned int array_index);
  * @return A pointer to the array or ``NULL``
  */
 void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size);
+
+/**
+ * Removes the data located at ``array_index``. All data
+ * within the array will be shifted left by one after the
+ * removal.
+ *
+ * @param array A pointer to an initialized ``lvd_array`` struct
+ * @param array_index The array index to access
+ * @return A pointer to the array or ``NULL``
+ */
+void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_index);
+
+/**
+ * Frees the ``array`` from memory. This action is
+ * irreversible.
+ *
+ * @param array A pointer to an initialized ``lvd_array`` struct
+ * @return void
+ */
+void lvd_array_free(struct lvd_array **array);
