@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 // ---
-#include "include/array.h"
+#include "include/arrays.h"
 // ---
 
 // ----------------------------------------------------------------
@@ -23,7 +23,7 @@
 
 // File Docstring
 // --------------------------------
-// libVoid || src/array.c <-> include/array.h
+// libVoid || src/arrays.c <-> include/arrays.h
 //
 // Allows for dynamically sized arrays during runtime.
 //

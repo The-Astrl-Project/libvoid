@@ -22,7 +22,7 @@
 
 // File Docstring
 // --------------------------------
-// libVoid || src/array.c <-> include/array.h
+// libVoid || src/arrays.c <-> include/arrays.h
 //
 // Allows for dynamically sized arrays during runtime.
 //

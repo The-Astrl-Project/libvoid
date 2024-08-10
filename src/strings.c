@@ -22,9 +22,9 @@
 
 // File Docstring
 // --------------------------------
-// libVoid || tests/tests.c <-> none
+// libVoid || src/strings.c <-> include/strings.h
 //
-// libVoid testing suite.
+// A string type implementation.
 //
 // @author @MaxineToTheStars <https://github.com/MaxineToTheStars>
 // ----------------------------------------------------------------
@@ -38,11 +38,5 @@
 // Variable Definitions
 
 // Main
-int main()
-{
-    // Return ERR for now
-    // TODO: Implement a proper test suite
-    return -1;
-}
 
 // Methods
