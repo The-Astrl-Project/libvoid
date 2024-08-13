@@ -11,7 +11,7 @@
 #!/usr/bin/env bash
 
 # Constants
-declare -r POSSIBLE_OPTIONS=":ghcbt"
+declare -r POSSIBLE_OPTIONS=":ghcbti"
 
 # Main
 function main()
@@ -38,6 +38,10 @@ function main()
             t)
                 # Run meson tests
                 tests
+            ;;
+            i)
+                # Install project
+                install
             ;;
             ?)
                 # Invalid argument/option
@@ -140,7 +144,31 @@ function tests()
     echo "Created build directory"
 
     # Re-run
-    build
+    tests
+}
+
+function install()
+{
+    # Check if ./build exists
+    if [ -d ./build ]; then
+        # Switch to ./build
+        cd ./build
+
+        # Compile
+        meson install
+
+        # Exit
+        exit
+    fi
+
+    # Create a new build directory
+    meson setup ./build > /dev/null 2>&1
+
+    # Log
+    echo "Created build directory"
+
+    # Re-run
+    install
 }
 
 # Execute

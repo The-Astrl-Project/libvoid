@@ -11,8 +11,9 @@
 #!/usr/bin/env bash
 
 # Constants
-declare -r POSSIBLE_OPTIONS=":ghc"
+declare -r POSSIBLE_OPTIONS=":ghsi"
 declare -r SOURCE_DIRECTORY="./src"
+declare -r INCLUDE_DIRECTORY="./include"
 
 # Main
 function main()
@@ -28,9 +29,13 @@ function main()
                 # Show the help message
                 help
             ;;
-            c)
-                # Glob files
-                glob
+            s)
+                # Glob files found in ./src
+                glob $SOURCE_DIRECTORY
+            ;;
+            i)
+                # Glob all files found in ./include
+                glob $INCLUDE_DIRECTORY
             ;;
             ?)
                 # Invalid
@@ -42,9 +47,6 @@ function main()
             ;;
         esac
     done
-
-    # Run glob by default
-    glob
 }
 
 # Functions
@@ -70,14 +72,15 @@ function help()
     echo "options:"
     echo "g     Print the GPL license"
     echo "h     Print this help message"
-    echo "c     Collects and echos all found files"
+    echo "s     Collects and echos all found source files"
+    echo "i     Collects and echos all found header files"
     echo
 }
 
 function glob()
 {
     # Recursively list all *.c files
-    _recursive_search $SOURCE_DIRECTORY
+    _recursive_search $1
 }
 
 function _recursive_search()
