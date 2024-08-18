@@ -313,3 +313,20 @@ void lvd_array_free(struct lvd_array **array)
     // Free the array struct
     free((*array));
 }
+
+void *lvd_array_get_ptr(struct lvd_array **array)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Return the array pointer
+    return (*array)->_ptr;
+
+failure:
+    // Return NULL
+    return NULL;
+}

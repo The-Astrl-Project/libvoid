@@ -103,3 +103,9 @@ void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_ind
  * @return void
  */
 void lvd_array_free(struct lvd_array **array);
+
+/**
+ * Retrieves the array pointer from the given ``array``.
+ * @return A pointer to the array or ``NULL``
+ */
+void *lvd_array_get_ptr(struct lvd_array **array);
