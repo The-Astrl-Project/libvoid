@@ -44,6 +44,7 @@ struct lvd_array;
 // Methods
 /**
  * Allocates a new ``lvd_array`` with the specified length and memory chunk size.
+ * If ``array_length`` or ``array_size`` is ``0`` the method will exit.
  *
  * @param array A pointer to an uninitialized ``lvd_array`` struct
  * @param array_length The starting length of the array
@@ -54,7 +55,8 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
 
 /**
  * Appends the given ``buffer`` to ``array``. The ``buffer`` must be
- * of the same ``size`` as the array.
+ * of the same ``size`` as the array. If ``buffer`` is ``NULL``
+ * the method will exit.
  *
  * @param array A pointer to an initialized ``lvd_array`` struct
  * @param buffer A pointer to a buffer of data
@@ -75,6 +77,7 @@ void *lvd_array_get(struct lvd_array **array, const unsigned int array_index);
 /**
  * Inserts the given ``buffer`` at the specified ``array_index``.
  * Any data located at ``array_index`` will be shifted right by one.
+ * If ``buffer`` is ``NULL`` the method will exit.
  *
  * @param array A pointer to an initialized ``lvd_array`` struct
  * @param array_index The array index to access
@@ -100,9 +103,9 @@ void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_ind
  * irreversible.
  *
  * @param array A pointer to an initialized ``lvd_array`` struct
- * @return void
+ * @return ``void`` or ``NULL`` if the array is uninitialized
  */
-void lvd_array_free(struct lvd_array **array);
+void *lvd_array_free(struct lvd_array **array);
 
 /**
  * Retrieves the array pointer from the given ``array``.

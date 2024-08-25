@@ -46,22 +46,46 @@ int main()
     struct lvd_string *my_string;
 
     // Populate with some data
-    lvd_string_new(&my_string, "Hello World! \n");
+    lvd_string_new(&my_string, "Hello World!\n");
 
     // Print
     printf("[Log] %s", (char *)lvd_string_get_value(&my_string));
 
     // Test formatting
-    lvd_string_format_from(&my_string, "floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
+    lvd_string_format_from(&my_string, "floats: %4.2f %+.0e %E\n", 3.1416, 3.1416, 3.1416);
 
     // Print
     printf("[FRMT] %s", (char *)lvd_string_get_value(&my_string));
 
     // Re-test
-    lvd_string_format_from(&my_string, "Preceding with zeros: %010d \n", 1977);
+    lvd_string_format_from(&my_string, "Preceding with zeros: %010d\n", 1977);
 
     // Print
     printf("[FRMT] %s", (char *)lvd_string_get_value(&my_string));
+
+    // Set the string value
+    lvd_string_set(&my_string, "Goodbye World!\n");
+
+    // Print
+    printf("[Log] %s", (char *)lvd_string_get_value(&my_string));
+
+    // Reset the string value
+    lvd_string_set(&my_string, NULL);
+
+    // Print
+    printf("[Log] %s (Should be empty)\n", (char *)lvd_string_get_value(&my_string));
+
+    // Set the string value
+    lvd_string_set(&my_string, "Hello ");
+
+    // Concat the string
+    lvd_string_concat(&my_string, "again World!\n");
+
+    // Print
+    printf("[Log] %s", (char *)lvd_string_get_value(&my_string));
+
+    // Free
+    lvd_string_free(&my_string);
 
     // Exit
     return 0;

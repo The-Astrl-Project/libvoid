@@ -61,6 +61,13 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
     void *struct_alloc;
     void *array_ptr_alloc;
 
+    // Avoid any funky errors
+    if (array_length == 0 || array_size == 0)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
     // Allocate memory for a new lvd_array struct
     struct_alloc = calloc(1, sizeof(struct lvd_array));
 
@@ -101,8 +108,15 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
         goto failure;
     }
 
+    // Avoid any funky errors
+    if (buffer == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
     // Calculate the amount of free memory left in the array
-    int free_memory = (*array)->_array_length - (*array)->_array_index_end;
+    const int free_memory = (*array)->_array_length - (*array)->_array_index_end;
 
     // Validate the array pointer has enough memory for the new buffer
     if (free_memory == 0 || free_memory < (buffer_length_size / (*array)->_array_size))
@@ -197,6 +211,13 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
 
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Avoid any funky errors
+    if (buffer == NULL)
     {
         // Jump to failure
         goto failure;
@@ -305,13 +326,24 @@ failure:
     return NULL;
 }
 
-void lvd_array_free(struct lvd_array **array)
+void *lvd_array_free(struct lvd_array **array)
 {
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
     // Free the array pointer
     free((*array)->_ptr);
 
     // Free the array struct
     free((*array));
+
+failure:
+    // Return NULL
+    return NULL;
 }
 
 void *lvd_array_get_ptr(struct lvd_array **array)
