@@ -11,7 +11,7 @@
 
 // Header Declarations
 // ----------------------------------------------------------------
-
+#include <stdarg.h>
 // ---
 
 // ---
@@ -70,3 +70,32 @@ void *lvd_string_set(struct lvd_string **string, const char *string_value);
  * @return A pointer to the string value or ``NULL``
  */
 void *lvd_string_concat(struct lvd_string **string, const char *string_value);
+
+/**
+ * Formats the ``lvd_string`` with the given ``string_format``. Fully supports
+ * ``printf``'s formatting options and flags.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @param string_format The formatting flags and options
+ * @return A pointer to the string value or ``NULL``
+ */
+void *lvd_string_format_from(struct lvd_string **string, const char *string_format, ...);
+
+/**
+ * Formats the ``lvd_string`` with the given ``string_format`` and ``vargs`` list. Fully supports
+ * ``printf``'s formatting options and flags.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @param string_format The formatting flags and options
+ * @param vargs An initialized list of variable arguments used for formatting
+ * @return A pointer to the string value or ``NULL``
+ */
+void *lvd_string_format_from_vargs(struct lvd_string **string, const char *string_format, va_list vargs);
+
+/**
+ * Returns the string value of the ``lvd_string``.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @return A pointer to the string value or ``NULL``
+ */
+void *lvd_string_get_value(struct lvd_string **string);

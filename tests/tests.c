@@ -11,9 +11,9 @@
 
 // Header Declarations
 // ----------------------------------------------------------------
-
+#include <stdio.h>
 // ---
-
+#include <libvoid/strings.h>
 // ---
 
 // ----------------------------------------------------------------
@@ -40,9 +40,31 @@
 // Main
 int main()
 {
-    // Return ERR for now
     // TODO: Implement a proper test suite
-    return -1;
+
+    // Declare new lvd_string
+    struct lvd_string *my_string;
+
+    // Populate with some data
+    lvd_string_new(&my_string, "Hello World! \n");
+
+    // Print
+    printf("[Log] %s", (char *)lvd_string_get_value(&my_string));
+
+    // Test formatting
+    lvd_string_format_from(&my_string, "floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
+
+    // Print
+    printf("[FRMT] %s", (char *)lvd_string_get_value(&my_string));
+
+    // Re-test
+    lvd_string_format_from(&my_string, "Preceding with zeros: %010d \n", 1977);
+
+    // Print
+    printf("[FRMT] %s", (char *)lvd_string_get_value(&my_string));
+
+    // Exit
+    return 0;
 }
 
 // Methods

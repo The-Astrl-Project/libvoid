@@ -11,8 +11,10 @@
 
 // Header Declarations
 // ----------------------------------------------------------------
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 // ---
 #include "include/strings.h"
 // ---
@@ -145,10 +147,124 @@ void *lvd_string_concat(struct lvd_string **string, const char *string_value)
     (*string)->_string_buffer = reallocated_string_buffer;
 
     // Zero out the new memory chunk
-    memset((*string)->_string_buffer + strlen(string_value), '\0', strlen(string_value));
+    memset((*string)->_string_buffer + strlen((*string)->_string_buffer), '\0', strlen(string_value));
 
     // Append the new string value
     strcat((*string)->_string_buffer, string_value);
+
+    // Return the string buffer
+    return (*string)->_string_buffer;
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void *lvd_string_format_from(struct lvd_string **string, const char *string_format, ...)
+{
+    // Temporary function scope variables
+    va_list args_ptr;
+    void *reallocated_string_buffer;
+
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Initialize the argument list
+    va_start(args_ptr, string_format);
+
+    // Calculate string length
+    size_t string_size = vsnprintf(NULL, 0, string_format, args_ptr) + 1;
+
+    // End the argument list
+    va_end(args_ptr);
+
+    // Re-allocate the string buffer
+    reallocated_string_buffer = realloc((*string)->_string_buffer, string_size);
+
+    // Validate the re-allocation
+    if (reallocated_string_buffer == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Update the string buffer
+    (*string)->_string_buffer = reallocated_string_buffer;
+
+    // Zero out the new memory chunk
+    memset((*string)->_string_buffer, '\0', string_size);
+
+    // Re-initialize the argument list
+    va_start(args_ptr, string_format);
+
+    // Format the string
+    vsnprintf((*string)->_string_buffer, string_size, string_format, args_ptr);
+
+    // End the argument list
+    va_end(args_ptr);
+
+    // Return the string buffer
+    return (*string)->_string_buffer;
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void *lvd_string_format_from_vargs(struct lvd_string **string, const char *string_format, va_list vargs)
+{
+    // Temporary function scope variables
+    void *reallocated_string_buffer;
+
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Calculate string length
+    size_t string_size = vsnprintf(NULL, 0, string_format, vargs) + 1;
+
+    // Re-allocate the string buffer
+    reallocated_string_buffer = realloc((*string)->_string_buffer, string_size);
+
+    // Validate the re-allocation
+    if (reallocated_string_buffer == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Update the string buffer
+    (*string)->_string_buffer = reallocated_string_buffer;
+
+    // Zero out the new memory chunk
+    memset((*string)->_string_buffer, '\0', string_size);
+
+    // Format the string
+    vsnprintf((*string)->_string_buffer, string_size, string_format, vargs);
+
+    // Return the string buffer
+    return (*string)->_string_buffer;
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void *lvd_string_get_value(struct lvd_string **string)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
 
     // Return the string buffer
     return (*string)->_string_buffer;
