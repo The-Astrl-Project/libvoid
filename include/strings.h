@@ -43,26 +43,6 @@ struct lvd_string;
 
 // Methods
 /**
- * Allocates a new ``lvd_string``. If ``NULL`` is passed in it will
- * be converted to ``""``
- *
- * @param string A pointer to an uninitialized ``lvd_string`` struct
- * @param string_value Optional string value
- * @return A pointer to the string value or ``NULL``
- */
-void *lvd_string_new(struct lvd_string **string, const char *string_value);
-
-/**
- * Sets the new ``string_value`` for the given ``lvd_string`` struct.
- * If ``string_value`` is set to ``NULL`` it will be converted to ``""``.
- *
- * @param string A pointer to an initialized ``lvd_string`` struct
- * @param string_value The new string value
- * @return A pointer to the string value or ``NULL``
- */
-void *lvd_string_set(struct lvd_string **string, const char *string_value);
-
-/**
  * Concat ``string_value`` to the end of the ``lvd_string`` struct.
  * If ``string_value`` is set to ``NULL`` the method will exit.
  *
@@ -94,6 +74,15 @@ void *lvd_string_format_from(struct lvd_string **string, const char *string_form
 void *lvd_string_format_from_vargs(struct lvd_string **string, const char *string_format, va_list vargs);
 
 /**
+ * Frees the ``string`` from memory. This action is
+ * irreversible.
+ *
+ * @param array A pointer to an initialized ``lvd_string`` struct
+ * @return ``void`` or ``NULL`` if the string is uninitialized
+ */
+void *lvd_string_free(struct lvd_string **string);
+
+/**
  * Returns the string value of the ``lvd_string``.
  *
  * @param string A pointer to an initialized ``lvd_string`` struct
@@ -102,10 +91,21 @@ void *lvd_string_format_from_vargs(struct lvd_string **string, const char *strin
 void *lvd_string_get_value(struct lvd_string **string);
 
 /**
- * Frees the ``string`` from memory. This action is
- * irreversible.
+ * Allocates a new ``lvd_string``. If ``NULL`` is passed in it will
+ * be converted to ``""``
  *
- * @param array A pointer to an initialized ``lvd_string`` struct
- * @return ``void`` or ``NULL`` if the string is uninitialized
+ * @param string A pointer to an uninitialized ``lvd_string`` struct
+ * @param string_value Optional string value
+ * @return A pointer to the string value or ``NULL``
  */
-void *lvd_string_free(struct lvd_string **string);
+void *lvd_string_new(struct lvd_string **string, const char *string_value);
+
+/**
+ * Sets the new ``string_value`` for the given ``lvd_string`` struct.
+ * If ``string_value`` is set to ``NULL`` it will be converted to ``""``.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @param string_value The new string value
+ * @return A pointer to the string value or ``NULL``
+ */
+void *lvd_string_set_value(struct lvd_string **string, const char *string_value);

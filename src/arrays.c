@@ -55,45 +55,21 @@ struct lvd_array
 // Main
 
 // Methods
-void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
+int lvd_array_get_length(struct lvd_array **array)
 {
-    // Temporary function scope variables
-    void *struct_alloc;
-    void *array_ptr_alloc;
-
-    // Avoid any funky errors
-    if (array_length == 0 || array_size == 0)
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
     {
         // Jump to failure
         goto failure;
     }
-
-    // Allocate memory for a new lvd_array struct
-    struct_alloc = calloc(1, sizeof(struct lvd_array));
-
-    // Allocate memory for a new lvd_array array pointer
-    array_ptr_alloc = calloc(array_length, array_size);
-
-    // Check if allocation was successful
-    if (struct_alloc == NULL || array_ptr_alloc == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Update the array struct
-    (*array) = struct_alloc;
-    (*array)->_ptr = array_ptr_alloc;
-    (*array)->_array_size = array_size;
-    (*array)->_array_length = array_length;
-    (*array)->_array_index_end = 0;
 
     // Return the array pointer
-    return (*array)->_ptr;
+    return (*array)->_array_length;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return -1
+    return -1;
 }
 
 void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size)
@@ -174,6 +150,26 @@ failure:
     return NULL;
 }
 
+void *lvd_array_free(struct lvd_array **array)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Free the array pointer
+    free((*array)->_ptr);
+
+    // Free the array struct
+    free((*array));
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
 void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
 {
     // Validate the lvd_array struct is already initalized
@@ -198,6 +194,23 @@ void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
 
     // Return the data entry at array_index
     return ((*array)->_ptr + ((array_index * (*array)->_array_size)));
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void *lvd_array_get_ptr(struct lvd_array **array)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Return the array pointer
+    return (*array)->_ptr;
 
 failure:
     // Return NULL
@@ -272,6 +285,47 @@ failure:
     return NULL;
 }
 
+void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
+{
+    // Temporary function scope variables
+    void *struct_alloc;
+    void *array_ptr_alloc;
+
+    // Avoid any funky errors
+    if (array_length == 0 || array_size == 0)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Allocate memory for a new lvd_array struct
+    struct_alloc = calloc(1, sizeof(struct lvd_array));
+
+    // Allocate memory for a new lvd_array array pointer
+    array_ptr_alloc = calloc(array_length, array_size);
+
+    // Check if allocation was successful
+    if (struct_alloc == NULL || array_ptr_alloc == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Update the array struct
+    (*array) = struct_alloc;
+    (*array)->_ptr = array_ptr_alloc;
+    (*array)->_array_size = array_size;
+    (*array)->_array_length = array_length;
+    (*array)->_array_index_end = 0;
+
+    // Return the array pointer
+    return (*array)->_ptr;
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
 void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_index)
 {
     // Temporary function scope variables
@@ -317,43 +371,6 @@ void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_ind
 
     // Update the array end index
     (*array)->_array_index_end -= 1;
-
-    // Return the array pointer
-    return (*array)->_ptr;
-
-failure:
-    // Return NULL
-    return NULL;
-}
-
-void *lvd_array_free(struct lvd_array **array)
-{
-    // Validate the lvd_array struct is already initalized
-    if ((*array) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Free the array pointer
-    free((*array)->_ptr);
-
-    // Free the array struct
-    free((*array));
-
-failure:
-    // Return NULL
-    return NULL;
-}
-
-void *lvd_array_get_ptr(struct lvd_array **array)
-{
-    // Validate the lvd_array struct is already initalized
-    if ((*array) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
 
     // Return the array pointer
     return (*array)->_ptr;
