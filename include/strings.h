@@ -43,6 +43,31 @@ struct lvd_string;
 
 // Methods
 /**
+ * Compares the value of ``string`` to the value of ``string_value``. The
+ * locale is not taken into account. Under the hood this is a shorthand for
+ * ``strcmp()``.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @param string_value The string value to compare
+ * @return An integer indicating the result of the comparision.
+ * @see https://www.man7.org/linux/man-pages/man3/strcmp.3.html
+ */
+int lvd_string_compare(struct lvd_string **string, const char *string_value);
+
+/**
+ * Compares the value of ``string`` to the value of ``string_value`` withing bounds of
+ * ``byte_length``. The locale is not taken into account. Under the hood this is a
+ * shorthand for ``strncmp()``.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @param string_value The string value to compare
+ * @param byte_length The Nth amount of bytes to compare
+ * @return An integer indicating the result of the comparision.
+ * @see https://www.man7.org/linux/man-pages/man3/strcmp.3.html
+ */
+int lvd_string_compare_n(struct lvd_string **string, const char *string_value, const unsigned int byte_length);
+
+/**
  * Concat ``string_value`` to the end of the ``lvd_string`` struct.
  * If ``string_value`` is set to ``NULL`` the method will exit.
  *

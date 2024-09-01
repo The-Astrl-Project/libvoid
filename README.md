@@ -1,6 +1,6 @@
 <!-- Warning text -->
-> [!WARNING]
-> This repository is under heavy development. Code will break/change. You have been warned.
+> [!NOTE]
+> This repository is under moderate development. Code will change but hopefully not break. You have been warned.
 
 <!-- Move text down -->
 <br>
@@ -32,31 +32,38 @@ git clone https://github.com/The-Astrl-Project/libvoid -b development && cd ./li
 ## Example
 
 ```c
-// Headers
-#include <stdlib.h>
-#include <libvoid/arrays.h>
+// A *simple* Hello World for C
 
-// Declare a struct
-struct my_struct
-{
-    void *some_pointer;
-    int some_value;
-};
+// Header files
+#include <stdio.h>
+#include <astrl/libvoid/arrays.h>
+#include <astrl/libvoid/strings.h>
 
-// Instance a new array
-struct lvd_array *my_array;
-lvd_array_new(&my_array, 1, sizeof(struct my_struct));
+// Variables
+struct lvd_string *message_one;
+struct lvd_string *message_two;
+struct lvd_array  *message_array;
+struct lvd_string *message_return_value;
 
-// Allocate
-struct my_struct *my_data = (struct my_struct *)malloc(1 * sizeof(struct my_struct));
+// Instance a new string struct
+lvd_string_new(&message_one, "Hello!\n");
+lvd_string_new(&message_two, "Bye!\n");
 
-// Add data
-my_data->some_value = 1;
+// Instance a new array struct
+lvd_array_new(&message_array, 1, sizeof(struct lvd_string *));
 
-// Append data
-lvd_array_append(&my_array, my_data, sizeof(*my_data));
+// Populate the array
+lvd_array_append(&message_array, message_one, sizeof(struct lvd_string *));
+lvd_array_append(&message_array, message_two, sizeof(struct lvd_string *));
 
-// Print data
-struct my_struct *return_data = (struct my_struct *)lvd_array_get(&my_array, 0);
-printf("%i\n", return_data->some_value);
+// Print
+message_return_value = lvd_array_get(&message_array, 0);
+printf("%s", lvd_string_get_value(&message_return_value));
+message_return_value = lvd_array_get(&message_array, 1);
+printf("%s", lvd_string_get_value(&message_return_value));
+
+// Cleanup
+lvd_string_free(&message_one);
+lvd_string_free(&message_two);
+lvd_array_free(&message_array);
 ```

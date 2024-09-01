@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------
 
 // ---
-#include "tests/tests.h"
+
 // ---
 
 // ----------------------------------------------------------------
@@ -38,11 +38,5 @@
 // Variable Definitions
 
 // Main
-int main()
-{
-    // Return ERR for now
-    // TODO: Implement a proper test suite
-    return -1;
-}
 
 // Methods

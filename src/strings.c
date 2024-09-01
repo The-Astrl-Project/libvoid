@@ -48,6 +48,56 @@ struct lvd_string
 // Main
 
 // Methods
+int lvd_string_compare(struct lvd_string **string, const char *string_value)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Avoid any funky errors
+    if (string_value == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Return the comparison result
+    return strcmp((*string)->_string_buffer, string_value);
+
+failure:
+    // TODO: Improve this
+    // Return -1
+    return -1;
+}
+
+int lvd_string_compare_n(struct lvd_string **string, const char *string_value, const unsigned int byte_length)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Avoid any funky errors
+    if (string_value == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Return the comparison result
+    return strncmp((*string)->_string_buffer, string_value, byte_length);
+
+failure:
+    // TODO: Improve this
+    // Return -1
+    return -1;
+}
+
 void *lvd_string_concat(struct lvd_string **string, const char *string_value)
 {
     // Temporary function scope variables

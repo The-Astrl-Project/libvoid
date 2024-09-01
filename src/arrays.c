@@ -186,7 +186,7 @@ void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
     //      length is a better alternative however, that means
     //      that NULL could be returned. It's really a matter
     //      of preference.
-    if (array_index > (*array)->_array_length)
+    if (array_index > (*array)->_array_length || array_index < 0)
     {
         // Jump to failure
         goto failure;
@@ -238,7 +238,7 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
 
     // Validate the index is not out of bounds
     // @see void *lvd_array_get
-    if (array_index > (*array)->_array_length)
+    if (array_index > (*array)->_array_length || array_index < 0)
     {
         // Jump to failure
         goto failure;
@@ -292,7 +292,7 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
     void *array_ptr_alloc;
 
     // Avoid any funky errors
-    if (array_length == 0 || array_size == 0)
+    if (array_length <= 0 || array_size <= 0)
     {
         // Jump to failure
         goto failure;
@@ -340,7 +340,7 @@ void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_ind
 
     // Validate the index is not out of bounds
     // @see void *lvd_array_get
-    if (array_index > (*array)->_array_length)
+    if (array_index > (*array)->_array_length || array_index < 0)
     {
         // Jump to failure
         goto failure;
