@@ -40,30 +40,33 @@ git clone https://github.com/The-Astrl-Project/libvoid -b development && cd ./li
 #include <astrl/libvoid/strings.h>
 
 // Variables
-struct lvd_string *message_one;
-struct lvd_string *message_two;
-struct lvd_array  *message_array;
-struct lvd_string *message_return_value;
+int main()
+{
+    struct lvd_string *message_one;
+    struct lvd_string *message_two;
+    struct lvd_array  *message_array;
+    struct lvd_string *message_return_value;
 
-// Instance a new string struct
-lvd_string_new(&message_one, "Hello!\n");
-lvd_string_new(&message_two, "Bye!\n");
+    // Instance a new string struct
+    lvd_string_new(&message_one, "Hello!\n");
+    lvd_string_new(&message_two, "Bye!\n");
 
-// Instance a new array struct
-lvd_array_new(&message_array, 1, sizeof(struct lvd_string *));
+    // Instance a new array struct
+    lvd_array_new(&message_array, 1, sizeof(struct lvd_string *));
 
-// Populate the array
-lvd_array_append(&message_array, message_one, sizeof(struct lvd_string *));
-lvd_array_append(&message_array, message_two, sizeof(struct lvd_string *));
+    // Populate the array
+    lvd_array_append(&message_array, message_one, sizeof(struct lvd_string *));
+    lvd_array_append(&message_array, message_two, sizeof(struct lvd_string *));
 
-// Print
-message_return_value = lvd_array_get(&message_array, 0);
-printf("%s", lvd_string_get_value(&message_return_value));
-message_return_value = lvd_array_get(&message_array, 1);
-printf("%s", lvd_string_get_value(&message_return_value));
+    // Print
+    message_return_value = lvd_array_get(&message_array, 0);
+    printf("%s", lvd_string_get_value(&message_return_value));
+    message_return_value = lvd_array_get(&message_array, 1);
+    printf("%s", lvd_string_get_value(&message_return_value));
 
-// Cleanup
-lvd_string_free(&message_one);
-lvd_string_free(&message_two);
-lvd_array_free(&message_array);
+    // Cleanup
+    lvd_string_free(&message_one);
+    lvd_string_free(&message_two);
+    lvd_array_free(&message_array);
+}
 ```

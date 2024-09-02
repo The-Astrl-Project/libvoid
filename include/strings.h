@@ -49,8 +49,8 @@ struct lvd_string;
  *
  * @param string A pointer to an initialized ``lvd_string`` struct
  * @param string_value The string value to compare
- * @return An integer indicating the result of the comparision.
  * @see https://www.man7.org/linux/man-pages/man3/strcmp.3.html
+ * @return An integer indicating the result of the comparision.
  */
 int lvd_string_compare(struct lvd_string **string, const char *string_value);
 
@@ -62,10 +62,20 @@ int lvd_string_compare(struct lvd_string **string, const char *string_value);
  * @param string A pointer to an initialized ``lvd_string`` struct
  * @param string_value The string value to compare
  * @param byte_length The Nth amount of bytes to compare
- * @return An integer indicating the result of the comparision.
  * @see https://www.man7.org/linux/man-pages/man3/strcmp.3.html
+ * @return An integer indicating the result of the comparision.
  */
 int lvd_string_compare_n(struct lvd_string **string, const char *string_value, const unsigned int byte_length);
+
+/**
+ * Returns the length of the ``string``'s ``string_value``.
+ * Under the hood this is a shorthand for ``strlen``.
+ *
+ * @param string A pointer to an initialized ``lvd_string`` struct
+ * @see https://man7.org/linux/man-pages/man3/strlen.3.html
+ * @return An integer indicating the length or ``-1``.
+ */
+int lvd_string_length(struct lvd_string **string);
 
 /**
  * Concat ``string_value`` to the end of the ``lvd_string`` struct.

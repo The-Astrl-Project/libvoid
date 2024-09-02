@@ -379,3 +379,41 @@ failure:
     // Return NULL
     return NULL;
 }
+
+void *lvd_array_replace_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Avoid any funky errors
+    if (buffer == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Validate the index is not out of bounds
+    // @see void *lvd_array_get
+    if (array_index > (*array)->_array_length || array_index < 0)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Copy data from the buffer to the specified array index
+    memcpy((*array)->_ptr + (array_index * (*array)->_array_size), buffer, buffer_length_size);
+
+    // Update the array end index
+    (*array)->_array_index_end += (buffer_length_size / (*array)->_array_size);
+
+    // Return the array pointer
+    return (*array)->_ptr;
+
+failure:
+    // Return NULL
+    return NULL;
+}

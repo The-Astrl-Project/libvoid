@@ -98,6 +98,23 @@ failure:
     return -1;
 }
 
+int lvd_string_length(struct lvd_string **string)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Return the comparison result
+    return strlen((*string)->_string_buffer);
+
+failure:
+    // Return -1
+    return -1;
+}
+
 void *lvd_string_concat(struct lvd_string **string, const char *string_value)
 {
     // Temporary function scope variables

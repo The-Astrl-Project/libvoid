@@ -121,3 +121,16 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
  * @return A pointer to the array or ``NULL``
  */
 void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_index);
+
+/**
+ * Replaces any data located at ``array_index`` with the given ``buffer``.
+ * Any data at ``array_index`` will be overwritten. If ``buffer`` is
+ * ``NULL`` the method will exit.
+ *
+ * @param array A pointer to an initialized ``lvd_array`` struct
+ * @param array_index The array index to access
+ * @param buffer A pointer to a buffer of data
+ * @param buffer_length_size The total length of the buffer (including the chunk size)
+ * @return A pointer to the array or ``NULL``
+ */
+void *lvd_array_replace_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size);
