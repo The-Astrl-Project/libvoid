@@ -31,20 +31,6 @@
 // ----------------------------------------------------------------
 
 // Struct Definitions
-struct lvd_array
-{
-    /* Stores the pointer to the array */
-    void *_ptr;
-
-    /* Stores the array length */
-    unsigned int _array_length;
-
-    /* Stores the array block size */
-    unsigned long _array_size;
-
-    /* Stores the end index of the array */
-    unsigned int _array_index_end;
-};
 
 // Enum Definitions
 
@@ -55,24 +41,7 @@ struct lvd_array
 // Main
 
 // Methods
-int lvd_array_get_length(struct lvd_array **array)
-{
-    // Validate the lvd_array struct is already initalized
-    if ((*array) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Return the array pointer
-    return (*array)->_array_length;
-
-failure:
-    // Return -1
-    return -1;
-}
-
-void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size)
+int lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size)
 {
     // Temporary function scope variables
     void *reallocated_array_pointer;
@@ -142,15 +111,75 @@ void *lvd_array_append(struct lvd_array **array, const void *buffer, const unsig
     // NOTE: This seems kinda redundant(?). Possible change in the future
     (*array)->_array_index_end = terminator_index + (buffer_length_size / (*array)->_array_size);
 
-    // Return the array pointer
-    return (*array)->_ptr;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_array_free(struct lvd_array **array)
+int lvd_array_detach(struct lvd_array **array)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Free the struct
+    free((*array));
+
+    // Return SUCCESS
+    return EXIT_SUCCESS;
+
+failure:
+    // Return FAILURE
+    return EXIT_FAILURE;
+}
+
+int lvd_array_empty(struct lvd_array **array)
+{
+    // Temporary function scope variables
+    void *reallocated_array_pointer;
+
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Reset some lvd_array metadata
+    (*array)->_array_length = 1;
+    (*array)->_array_index_end = 0;
+
+    // Re-allocate the array pointer
+    reallocated_array_pointer = realloc((*array)->_ptr, ((*array)->_array_length * (*array)->_array_size));
+
+    // Validate the re-allocation
+    if (reallocated_array_pointer == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Update the array pointer
+    (*array)->_ptr = reallocated_array_pointer;
+
+    // Zero out the new memory chunk
+    memset((*array)->_ptr, '\0', ((*array)->_array_length * (*array)->_array_size));
+
+    // Return SUCCESS
+    return EXIT_SUCCESS;
+
+failure:
+    // Return FAILURE
+    return EXIT_FAILURE;
+}
+
+int lvd_array_free(struct lvd_array **array)
 {
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
@@ -162,45 +191,15 @@ void *lvd_array_free(struct lvd_array **array)
     // Free the array pointer
     free((*array)->_ptr);
 
-    // Free the array struct
-    free((*array));
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
-{
-    // Validate the lvd_array struct is already initalized
-    if ((*array) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Validate the index is not out of bounds
-    // NOTE: I *could* have it check if the index is between
-    //      start_index < index < end_index but that wouldn't
-    //      be vary "array like". So capping it at the array
-    //      length is a better alternative however, that means
-    //      that NULL could be returned. It's really a matter
-    //      of preference.
-    if (array_index > (*array)->_array_length || array_index < 0)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Return the data entry at array_index
-    return ((*array)->_ptr + ((array_index * (*array)->_array_size)));
-
-failure:
-    // Return NULL
-    return NULL;
-}
-
-void *lvd_array_get_ptr(struct lvd_array **array)
+int lvd_array_get_length(struct lvd_array **array)
 {
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
@@ -210,14 +209,14 @@ void *lvd_array_get_ptr(struct lvd_array **array)
     }
 
     // Return the array pointer
-    return (*array)->_ptr;
+    return (*array)->_array_length;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return -EXIT_FAILURE;
 }
 
-void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
+int lvd_array_insert_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
 {
     // Temporary function scope variables
     void *reallocated_array_pointer;
@@ -277,15 +276,15 @@ void *lvd_array_insert_at(struct lvd_array **array, const unsigned int array_ind
     // Update the array end index
     (*array)->_array_index_end += (buffer_length_size / (*array)->_array_size);
 
-    // Return the array pointer
-    return (*array)->_ptr;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
+int lvd_array_new(struct lvd_array **array, const unsigned int array_length, const unsigned long array_size)
 {
     // Temporary function scope variables
     void *struct_alloc;
@@ -318,15 +317,15 @@ void *lvd_array_new(struct lvd_array **array, const unsigned int array_length, c
     (*array)->_array_length = array_length;
     (*array)->_array_index_end = 0;
 
-    // Return the array pointer
-    return (*array)->_ptr;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_index)
+int lvd_array_remove_at(struct lvd_array **array, const unsigned int array_index)
 {
     // Temporary function scope variables
     void *reallocated_array_pointer;
@@ -372,15 +371,15 @@ void *lvd_array_remove_at(struct lvd_array **array, const unsigned int array_ind
     // Update the array end index
     (*array)->_array_index_end -= 1;
 
-    // Return the array pointer
-    return (*array)->_ptr;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_array_replace_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
+int lvd_array_replace_at(struct lvd_array **array, const unsigned int array_index, const void *buffer, const unsigned int buffer_length_size)
 {
     // Validate the lvd_array struct is already initalized
     if ((*array) == NULL)
@@ -409,6 +408,53 @@ void *lvd_array_replace_at(struct lvd_array **array, const unsigned int array_in
 
     // Update the array end index
     (*array)->_array_index_end += (buffer_length_size / (*array)->_array_size);
+
+    // Return SUCCESS
+    return EXIT_SUCCESS;
+
+failure:
+    // Return FAILURE
+    return EXIT_FAILURE;
+}
+
+void *lvd_array_get(struct lvd_array **array, const unsigned int array_index)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Validate the index is not out of bounds
+    // NOTE: I *could* have it check if the index is between
+    //      start_index < index < end_index but that wouldn't
+    //      be vary "array like". So capping it at the array
+    //      length is a better alternative however, that means
+    //      that NULL could be returned. It's really a matter
+    //      of preference.
+    if (array_index > (*array)->_array_length || array_index < 0)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Return the data entry at array_index
+    return ((*array)->_ptr + ((array_index * (*array)->_array_size)));
+
+failure:
+    // Return NULL
+    return NULL;
+}
+
+void *lvd_array_get_ptr(struct lvd_array **array)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*array) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
 
     // Return the array pointer
     return (*array)->_ptr;

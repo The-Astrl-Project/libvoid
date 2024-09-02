@@ -33,11 +33,6 @@
 // ----------------------------------------------------------------
 
 // Struct Definitions
-struct lvd_string
-{
-    /* Stores the string value */
-    char *_string_buffer;
-};
 
 // Enum Definitions
 
@@ -68,9 +63,9 @@ int lvd_string_compare(struct lvd_string **string, const char *string_value)
     return strcmp((*string)->_string_buffer, string_value);
 
 failure:
-    // TODO: Improve this
-    // Return -1
-    return -1;
+    // Return FAILURE
+    // TODO: Improve this(?)
+    return -EXIT_FAILURE;
 }
 
 int lvd_string_compare_n(struct lvd_string **string, const char *string_value, const unsigned int byte_length)
@@ -93,29 +88,12 @@ int lvd_string_compare_n(struct lvd_string **string, const char *string_value, c
     return strncmp((*string)->_string_buffer, string_value, byte_length);
 
 failure:
-    // TODO: Improve this
-    // Return -1
-    return -1;
+    // Return FAILURE
+    // TODO: Improve this(?)
+    return -EXIT_FAILURE;
 }
 
-int lvd_string_length(struct lvd_string **string)
-{
-    // Validate the lvd_array struct is already initalized
-    if ((*string) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Return the comparison result
-    return strlen((*string)->_string_buffer);
-
-failure:
-    // Return -1
-    return -1;
-}
-
-void *lvd_string_concat(struct lvd_string **string, const char *string_value)
+int lvd_string_concat(struct lvd_string **string, const char *string_value)
 {
     // Temporary function scope variables
     void *reallocated_string_buffer;
@@ -156,15 +134,35 @@ void *lvd_string_concat(struct lvd_string **string, const char *string_value)
     // Append the new string value
     strcat((*string)->_string_buffer, string_value);
 
-    // Return the string buffer
-    return (*string)->_string_buffer;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_string_format_from(struct lvd_string **string, const char *string_format, ...)
+int lvd_string_detach(struct lvd_string **string)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
+
+    // Free the struct
+    free((*string));
+
+    // Return SUCCESS
+    return EXIT_SUCCESS;
+
+failure:
+    // Return FAILURE
+    return EXIT_FAILURE;
+}
+
+int lvd_string_format_from(struct lvd_string **string, const char *string_format, ...)
 {
     // Temporary function scope variables
     va_list args_ptr;
@@ -211,15 +209,15 @@ void *lvd_string_format_from(struct lvd_string **string, const char *string_form
     // End the argument list
     va_end(args_ptr);
 
-    // Return the string buffer
-    return (*string)->_string_buffer;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_string_format_from_vargs(struct lvd_string **string, const char *string_format, va_list vargs)
+int lvd_string_format_from_vargs(struct lvd_string **string, const char *string_format, va_list vargs)
 {
     // Temporary function scope variables
     va_list args_ptr;
@@ -266,15 +264,15 @@ void *lvd_string_format_from_vargs(struct lvd_string **string, const char *strin
     // End the argument list
     va_end(args_ptr);
 
-    // Return the string buffer
-    return (*string)->_string_buffer;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_string_free(struct lvd_string **string)
+int lvd_string_free(struct lvd_string **string)
 {
     // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
@@ -286,15 +284,15 @@ void *lvd_string_free(struct lvd_string **string)
     // Free the array pointer
     free((*string)->_string_buffer);
 
-    // Free the array struct
-    free((*string));
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_string_get_value(struct lvd_string **string)
+int lvd_string_length(struct lvd_string **string)
 {
     // Validate the lvd_array struct is already initalized
     if ((*string) == NULL)
@@ -303,15 +301,15 @@ void *lvd_string_get_value(struct lvd_string **string)
         goto failure;
     }
 
-    // Return the string buffer
-    return (*string)->_string_buffer;
+    // Return the comparison result
+    return strlen((*string)->_string_buffer);
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return -EXIT_FAILURE;
 }
 
-void *lvd_string_new(struct lvd_string **string, const char *string_value)
+int lvd_string_new(struct lvd_string **string, const char *string_value)
 {
     // Temporary function scope variables
     void *struct_alloc;
@@ -341,15 +339,15 @@ void *lvd_string_new(struct lvd_string **string, const char *string_value)
     // Copy over the string value to the newly allocated string buffer
     strcpy((*string)->_string_buffer, choosen_string);
 
-    // Return the string buffer
-    return (*string)->_string_buffer;
+    // Return SUCCESS
+    return EXIT_SUCCESS;
 
 failure:
-    // Return NULL
-    return NULL;
+    // Return FAILURE
+    return EXIT_FAILURE;
 }
 
-void *lvd_string_set_value(struct lvd_string **string, const char *string_value)
+int lvd_string_set_value(struct lvd_string **string, const char *string_value)
 {
     // Temporary function scope variables
     void *reallocated_string_buffer;
@@ -383,6 +381,23 @@ void *lvd_string_set_value(struct lvd_string **string, const char *string_value)
 
     // Copy over the new string value
     strcpy((*string)->_string_buffer, choosen_string);
+
+    // Return SUCCESS
+    return EXIT_SUCCESS;
+
+failure:
+    // Return FAILURE
+    return EXIT_FAILURE;
+}
+
+void *lvd_string_get_value(struct lvd_string **string)
+{
+    // Validate the lvd_array struct is already initalized
+    if ((*string) == NULL)
+    {
+        // Jump to failure
+        goto failure;
+    }
 
     // Return the string buffer
     return (*string)->_string_buffer;

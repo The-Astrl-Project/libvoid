@@ -32,41 +32,51 @@ git clone https://github.com/The-Astrl-Project/libvoid -b development && cd ./li
 ## Example
 
 ```c
-// A *simple* Hello World for C
-
 // Header files
 #include <stdio.h>
 #include <astrl/libvoid/arrays.h>
 #include <astrl/libvoid/strings.h>
 
-// Variables
 int main()
 {
+    // Variables
     struct lvd_string *message_one;
     struct lvd_string *message_two;
-    struct lvd_array  *message_array;
-    struct lvd_string *message_return_value;
+    struct lvd_array *message_array;
 
-    // Instance a new string struct
-    lvd_string_new(&message_one, "Hello!\n");
-    lvd_string_new(&message_two, "Bye!\n");
+    // Instance a new lvd_array
+    lvd_array_new(&message_array, 1, sizeof(struct lvd_string));
 
-    // Instance a new array struct
-    lvd_array_new(&message_array, 1, sizeof(struct lvd_string *));
+    // Instance new lvd_strings
+    lvd_string_new(&message_one, "Hello World!");
+    lvd_string_new(&message_two, "Goodbye World!");
 
-    // Populate the array
-    lvd_array_append(&message_array, message_one, sizeof(struct lvd_string *));
-    lvd_array_append(&message_array, message_two, sizeof(struct lvd_string *));
+    // Append
+    // The lvd_array will automatically re-size itself
+    lvd_array_append(&message_array, message_one, sizeof(*message_one));
+    lvd_array_append(&message_array, message_two, sizeof(*message_two));
+
+    // Free some data (it is already stored in the message_array)
+    lvd_string_detach(&message_one);
+    lvd_string_detach(&message_two);
+
+    // Retrieve and modify some data
+    message_two = lvd_array_get(&message_array, 1);
+    // Since this is pass by reference we can directly edit the entry
+    lvd_string_set_value(&message_two, "Or Goodbye Again?");
 
     // Print
-    message_return_value = lvd_array_get(&message_array, 0);
-    printf("%s", lvd_string_get_value(&message_return_value));
-    message_return_value = lvd_array_get(&message_array, 1);
-    printf("%s", lvd_string_get_value(&message_return_value));
+    message_one = lvd_array_get(&message_array, 0);
+    message_two = lvd_array_get(&message_array, 1);
+    printf("%s\n", lvd_string_get_value(&message_one));
+    printf("%s\n", lvd_string_get_value(&message_two));
 
     // Cleanup
     lvd_string_free(&message_one);
     lvd_string_free(&message_two);
     lvd_array_free(&message_array);
+
+    // Exit
+    return 0;
 }
 ```
