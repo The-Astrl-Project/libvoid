@@ -45,7 +45,7 @@
 // Methods
 int lvd_string_compare(struct lvd_string **string, const char *string_value)
 {
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -70,7 +70,7 @@ failure:
 
 int lvd_string_compare_n(struct lvd_string **string, const char *string_value, const unsigned int byte_length)
 {
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -98,7 +98,7 @@ int lvd_string_concat(struct lvd_string **string, const char *string_value)
     // Temporary function scope variables
     void *reallocated_string_buffer;
 
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -144,7 +144,7 @@ failure:
 
 int lvd_string_detach(struct lvd_string **string)
 {
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -168,7 +168,7 @@ int lvd_string_format_from(struct lvd_string **string, const char *string_format
     va_list args_ptr;
     void *reallocated_string_buffer;
 
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -223,7 +223,7 @@ int lvd_string_format_from_vargs(struct lvd_string **string, const char *string_
     va_list args_ptr;
     void *reallocated_string_buffer;
 
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -294,7 +294,7 @@ failure:
 
 int lvd_string_length(struct lvd_string **string)
 {
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
@@ -315,15 +315,15 @@ int lvd_string_new(struct lvd_string **string, const char *string_value)
     void *struct_alloc;
     void *string_buffer_alloc;
 
-    // Declare the choosen string and it's length
-    const char *choosen_string = (string_value == NULL) ? "" : string_value;
-    const int choosen_string_length = strlen(choosen_string) + 1;
+    // Declare the chosen string and it's length
+    const char *chosen_string = (string_value == NULL) ? "" : string_value;
+    const int chosen_string_length = strlen(chosen_string) + 1;
 
     // Allocate memory for a new lvd_string struct
     struct_alloc = calloc(1, sizeof(struct lvd_string));
 
     // Allocate memory for a new lvd_string string buffer
-    string_buffer_alloc = calloc(choosen_string_length, sizeof(char));
+    string_buffer_alloc = calloc(chosen_string_length, sizeof(char));
 
     // Check if allocation was successful
     if (struct_alloc == NULL || string_buffer_alloc == NULL)
@@ -337,7 +337,7 @@ int lvd_string_new(struct lvd_string **string, const char *string_value)
     (*string)->_string_buffer = string_buffer_alloc;
 
     // Copy over the string value to the newly allocated string buffer
-    strcpy((*string)->_string_buffer, choosen_string);
+    strcpy((*string)->_string_buffer, chosen_string);
 
     // Return SUCCESS
     return EXIT_SUCCESS;
@@ -352,19 +352,19 @@ int lvd_string_set_value(struct lvd_string **string, const char *string_value)
     // Temporary function scope variables
     void *reallocated_string_buffer;
 
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
         goto failure;
     }
 
-    // Declare the choosen string and it's length
-    const char *choosen_string = (string_value == NULL) ? "" : string_value;
-    const int choosen_string_length = strlen(choosen_string) + 1;
+    // Declare the chosen string and it's length
+    const char *chosen_string = (string_value == NULL) ? "" : string_value;
+    const int chosen_string_length = strlen(chosen_string) + 1;
 
     // Re-allocate the string buffer
-    reallocated_string_buffer = realloc((*string)->_string_buffer, choosen_string_length);
+    reallocated_string_buffer = realloc((*string)->_string_buffer, chosen_string_length);
 
     // Validate the re-allocation
     if (reallocated_string_buffer == NULL)
@@ -377,10 +377,10 @@ int lvd_string_set_value(struct lvd_string **string, const char *string_value)
     (*string)->_string_buffer = reallocated_string_buffer;
 
     // Zero out the new memory chunk
-    memset((*string)->_string_buffer, '\0', choosen_string_length);
+    memset((*string)->_string_buffer, '\0', chosen_string_length);
 
     // Copy over the new string value
-    strcpy((*string)->_string_buffer, choosen_string);
+    strcpy((*string)->_string_buffer, chosen_string);
 
     // Return SUCCESS
     return EXIT_SUCCESS;
@@ -392,7 +392,7 @@ failure:
 
 void *lvd_string_get_value(struct lvd_string **string)
 {
-    // Validate the lvd_array struct is already initalized
+    // Validate the lvd_string struct is already initalized
     if ((*string) == NULL)
     {
         // Jump to failure
