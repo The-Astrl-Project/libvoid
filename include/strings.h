@@ -82,19 +82,6 @@ int lvd_string_compare_n(struct lvd_string **string, const char *string_value, c
 int lvd_string_concat(struct lvd_string **string, const char *string_value);
 
 /**
- * Detaches the ``lvd_string`` struct from the ``string``.
- * The ``lvd_string`` struct that was passed in can then
- * be re-used for another ``string``.
- *
- * @param string A pointer to an initialized ``lvd_string`` struct
- * @return ``EXIT_SUCCESS`` or ``EXIT_FAILURE`` if the string is uninitialized
- * @warning Memory leaks are possible with this. Make sure ``lvd_string_free`` is called
- *          when cleaning up detached strings.
- * @note Possible future deprecation. You have been warned.
- */
-int lvd_string_detach(struct lvd_string **string);
-
-/**
  * Formats the ``lvd_string`` with the given ``string_format``. Fully supports
  * ``printf``'s formatting options and flags.
  *

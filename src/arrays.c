@@ -119,26 +119,6 @@ failure:
     return EXIT_FAILURE;
 }
 
-int lvd_array_detach(struct lvd_array **array)
-{
-    // Validate the lvd_array struct is already initalized
-    if ((*array) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Free the struct
-    free((*array));
-
-    // Return SUCCESS
-    return EXIT_SUCCESS;
-
-failure:
-    // Return FAILURE
-    return EXIT_FAILURE;
-}
-
 int lvd_array_empty(struct lvd_array **array)
 {
     // Temporary function scope variables
@@ -190,6 +170,9 @@ int lvd_array_free(struct lvd_array **array)
 
     // Free the array pointer
     free((*array)->_ptr);
+
+    // Free the array struct
+    free((*array));
 
     // Return SUCCESS
     return EXIT_SUCCESS;

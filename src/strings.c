@@ -142,26 +142,6 @@ failure:
     return EXIT_FAILURE;
 }
 
-int lvd_string_detach(struct lvd_string **string)
-{
-    // Validate the lvd_string struct is already initalized
-    if ((*string) == NULL)
-    {
-        // Jump to failure
-        goto failure;
-    }
-
-    // Free the struct
-    free((*string));
-
-    // Return SUCCESS
-    return EXIT_SUCCESS;
-
-failure:
-    // Return FAILURE
-    return EXIT_FAILURE;
-}
-
 int lvd_string_format_from(struct lvd_string **string, const char *string_format, ...)
 {
     // Temporary function scope variables
@@ -281,8 +261,11 @@ int lvd_string_free(struct lvd_string **string)
         goto failure;
     }
 
-    // Free the array pointer
+    // Free the string pointer
     free((*string)->_string_buffer);
+
+    // Free the string struct
+    free((*string));
 
     // Return SUCCESS
     return EXIT_SUCCESS;

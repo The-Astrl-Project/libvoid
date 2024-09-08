@@ -68,19 +68,6 @@ struct lvd_array
 int lvd_array_append(struct lvd_array **array, const void *buffer, const unsigned int buffer_length_size);
 
 /**
- * Detaches the ``lvd_array`` struct from the ``array``.
- * The ``lvd_array`` struct that was passed in can then
- * be re-used for another ``array``.
- *
- * @param array A pointer to an initialized ``lvd_array`` struct
- * @return ``EXIT_SUCCESS`` or ``EXIT_FAILURE`` if the array is uninitialized
- * @warning Memory leaks are possible with this. Make sure ``lvd_array_free`` is called
- *          when cleaning up detached arrays.
- * @note Possible future deprecation. You have been warned.
- */
-int lvd_array_detach(struct lvd_array **array);
-
-/**
  * Empties the given ``array``. This action is
  * irreversible.
  *
