@@ -1,6 +1,6 @@
 <!-- Warning text -->
-> [!NOTE]
-> This repository is under moderate development. Code will change but hopefully not break. You have been warned.
+> [!WARNING]
+> This branch is solely for archival purposes. DO NOT USE
 
 <!-- Move text down -->
 <br>
