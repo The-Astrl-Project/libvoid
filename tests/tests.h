@@ -30,6 +30,14 @@
 // ----------------------------------------------------------------
 
 // Struct Definitions
+/* Struct used for testing */
+struct lvd_testing_struct
+{
+    /* Numeric value field */
+    int numeric_value;
+    /* Pointer value field  */
+    void *pointer_value;
+};
 
 // Enum Definitions
 
@@ -40,3 +48,24 @@
 // Main
 
 // Methods
+/**
+ * Tests ``lvd_arraylist_append`` and ``lvd_arraylist_append_at``
+ * functionality.
+ *
+ * @return ``void``
+ */
+void tests_lvd_arraylist_append();
+
+/**
+ * Tests ``lvd_arraylist_remove_at`` functionality.
+ *
+ * @return ``void``
+ */
+void tests_lvd_arraylist_remove();
+
+/**
+ * Tests ``lvd_arraylist_replace_at`` functionality.
+ *
+ * @return ``void``
+ */
+void tests_lvd_arraylist_replace();
