@@ -214,6 +214,36 @@ void lvd_arraylist_append_at(struct lvd_arraylist_t *arraylist, const void *data
     arraylist->array_items += 1;
 }
 
+void lvd_arraylist_empty(struct lvd_arraylist_t *arraylist)
+{
+    // Is the ArrayList even initialized?
+    if (arraylist == NULL)
+    {
+        // ArrayList is not initialized
+        return;
+    }
+
+    // Free the array pointer
+    free(arraylist->data);
+
+    // Reset the array data
+    arraylist->array_items = 0;
+    arraylist->array_length = 1;
+
+    // Allocate a new array pointer
+    void *tmp = calloc(arraylist->array_length, arraylist->array_size);
+
+    // Was allocation successful?
+    if (tmp == NULL)
+    {
+        // Error during allocation
+        return;
+    }
+
+    // Assign the new array pointer
+    arraylist->data = tmp;
+}
+
 void lvd_arraylist_remove_at(struct lvd_arraylist_t *arraylist, const unsigned int index)
 {
 

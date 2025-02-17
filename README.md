@@ -13,7 +13,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/The-Astrl-Project/libvoid -b development && cd ./libvoid
+git clone https://github.com/The-Astrl-Project/libvoid.git -b development --recurse-submodules
 
 # Build the project
 ./scripts/build.sh -b

@@ -52,7 +52,7 @@ struct lvd_arraylist_t;
 struct lvd_arraylist_t *lvd_arraylist_init(size_t length, size_t size);
 
 /**
- * Frees the given ``lvd_arraylist_t`` and its underlying data.
+ * Frees the given ``arraylist`` and its underlying data.
  *
  * @param arraylist An initialized ``lvd_arraylist_t``
  * @return ``void``
@@ -82,6 +82,14 @@ void lvd_arraylist_append(struct lvd_arraylist_t *arraylist, const void *data_bu
  *       arraylist index size.
  */
 void lvd_arraylist_append_at(struct lvd_arraylist_t *arraylist, const void *data_buffer, const unsigned int index);
+
+/**
+ * Clears the given ``arraylist``.
+ *
+ * @param arraylist An initialized ``lvd_arraylist_t``
+ * @return ``void``
+ */
+void lvd_arraylist_empty(struct lvd_arraylist_t *arraylist);
 
 /**
  * Removes the data at the given ``index``. The resulting indicies will be shifted left.
