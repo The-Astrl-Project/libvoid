@@ -22,8 +22,11 @@ project(
     license: 'GPLv3',
     license_files: ['LICENSE'],
     meson_version: '>= 1.5.0',
-    version: '0-1.0-dev'
+    version: '0.1.0-dev'
 )
+
+# Project variables
+PROJECT_VERSION = '0.1.0-dev'
 
 # Run the globber.sh script to collect all source and header files
 # NOTE: This is not recommended
@@ -46,7 +49,7 @@ test(
 )
 
 # Library files declaration
-library(
+lvd = library(
     'void',
     g_source_files,
     install: true,
@@ -54,9 +57,19 @@ library(
 )
 
 # Library headers declaration
-install_headers(
+lvdh = install_headers(
     g_include_files,
     follow_symlinks: true,
     install_dir: 'include/astrl/libvoid',
     preserve_path: false
+)
+
+# Generate pkg-config
+pkg = import('pkgconfig')
+pkg.generate(
+    lvd,
+    description: 'Practical data structures and utilities for C development - Provided by Astrl',
+    name: 'libVoid',
+    url: 'https://github.com/The-Astrl-Project/libvoid',
+    version: PROJECT_VERSION,
 )
