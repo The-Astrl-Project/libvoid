@@ -69,6 +69,7 @@ pkg = import('pkgconfig')
 pkg.generate(
     lvd,
     description: 'Practical data structures and utilities for C development - Provided by Astrl',
+    install_dir: '/usr/lib/pkgconfig',
     name: 'libVoid',
     url: 'https://github.com/The-Astrl-Project/libvoid',
     version: PROJECT_VERSION,
