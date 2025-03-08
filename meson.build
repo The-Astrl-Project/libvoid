@@ -17,7 +17,7 @@ project(
         'errorlogs': 'true',
         'optimization': '0',
         'stdsplit': 'true',
-        'c_std': 'c99'
+        'c_std': 'gnu99'
     },
     license: 'GPLv3',
     license_files: ['LICENSE'],
@@ -70,7 +70,7 @@ pkg.generate(
     lvd,
     description: 'Practical data structures and utilities for C development - Provided by Astrl',
     install_dir: '/usr/lib/pkgconfig',
-    name: 'libVoid',
+    name: 'libvoid',
     url: 'https://github.com/The-Astrl-Project/libvoid',
     version: PROJECT_VERSION,
 )
